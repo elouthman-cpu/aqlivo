@@ -20,9 +20,9 @@ jobs:
           from pathlib import Path
           parts = []
           for i in range(10):
-              parts.append(Path(f"sitepart_{i:02d}").read_text())
-          tail = Path("sitepart_10").read_text()
-          # The transport dropped one four-character base64 block from the final chunk.
+              parts.append(Path(f"sitepart_{i:02d}").read_text().strip())
+          tail = Path("sitepart_10").read_text().strip()
+          # One four-character base64 block was dropped from the final transported chunk.
           if len(tail) == 916:
               tail = tail[:900] + "0iu9" + tail[900:]
           parts.append(tail)
