@@ -3,7 +3,7 @@ name: Unpack AQLIVO site
 on:
   push:
     paths:
-      - 'site.tar.gz.b64'
+      - 'aqlivo_part_*'
   workflow_dispatch:
 
 permissions:
@@ -16,10 +16,11 @@ jobs:
       - uses: actions/checkout@v4
       - name: Decode site archive
         run: |
+          cat aqlivo_part_* > /tmp/aqlivo-site.tar.gz.b64
           rm -rf /tmp/aqlivo-site
           mkdir -p /tmp/aqlivo-site
-          base64 -d site.tar.gz.b64 | tar -xzf - -C /tmp/aqlivo-site
-          rsync -a /tmp/aqlivo-site/ ./ --exclude='.git' --exclude='.github' --exclude='site.tar.gz.b64'
+          base64 -d /tmp/aqlivo-site.tar.gz.b64 | tar -xzf - -C /tmp/aqlivo-site
+          rsync -a /tmp/aqlivo-site/ ./ --exclude='.git' --exclude='.github' --exclude='aqlivo_part_*'
       - name: Commit site files
         run: |
           git config user.name "AQLIVO Bot"
