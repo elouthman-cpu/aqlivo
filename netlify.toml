@@ -1,6 +1,20 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/"
+  to = "/en/"
+  status = 302
+  force = true
+  [redirects.query]
+    lang = "en"
+
+[[redirects]]
+  from = "/en"
+  to = "/en/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "/*"
   [headers.values]
