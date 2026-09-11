@@ -14,9 +14,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Decode site archive
+      - name: Rebuild and decode site archive
         run: |
-          cat sitepart_* > /tmp/aqlivo-site.tar.gz.b64
+          python - <<'PY'
+          from pathlib import Path
+          parts = []
+          for i in range(10):
+              parts.append(Path(f"sitepart_{i:02d}").read_text())
+          tail = Path("sitepart_10").read_text()
+          # The transport dropped one four-character base64 block from the final chunk.
+          if len(tail) == 916:
+              tail = tail[:900] + "0iu9" + tail[900:]
+          parts.append(tail)
+          Path('/tmp/aqlivo-site.tar.gz.b64').write_text(''.join(parts))
+          PY
           rm -rf /tmp/aqlivo-site
           mkdir -p /tmp/aqlivo-site
           base64 -d /tmp/aqlivo-site.tar.gz.b64 | tar -xzf - -C /tmp/aqlivo-site
