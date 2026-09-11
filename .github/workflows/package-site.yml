@@ -1,0 +1,22 @@
+name: Package AQLIVO site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload site files
+        uses: actions/upload-artifact@v4
+        with:
+          name: aqlivo-site
+          path: |
+            .
+            !.git
+            !.github
+          include-hidden-files: true
+          if-no-files-found: error
